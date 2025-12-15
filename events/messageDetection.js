@@ -1,10 +1,12 @@
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags, PermissionsBitField } = require('discord.js');
 const { Users } = require('../database/sequelize');
 
+const config = require('../config.json');
+
 const PRAISE_KEYWORDS = ['bless', 'praise', 'hail', 'worship'];
 const SIN_KEYWORDS = ['ugly', 'stupid', 'hate', 'trash', 'bad', 'dumb', 'suck', 'brainwash', 'ling'];
 
-const TARGET_NAME = 'sophia';
+// const TARGET_NAME = 'sophia';
 
 module.exports = {
     name: Events.MessageCreate,
@@ -19,7 +21,15 @@ module.exports = {
         });
 
         const messageContent = message.content.toLowerCase();
-        if (!messageContent.includes(TARGET_NAME)) return;
+
+        // if (!messageContent.includes(TARGET_NAME)) return;
+
+        // failsafe for if config.json file doesn't exist or if "targetwords" doesn't exist in config
+        const TARGET_NAME = Array.isArray(config.targetwords)
+            ? config.targetwords.map(w => w.toLowerCase())
+            : [];
+
+        if (!TARGET_NAME.some(word => messageContent.includes(word))) return;
 
         // If author is admin, just ignore
         if (message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
