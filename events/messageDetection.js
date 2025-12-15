@@ -21,6 +21,11 @@ module.exports = {
         const messageContent = message.content.toLowerCase();
         if (!messageContent.includes(TARGET_NAME)) return;
 
+        // If author is admin, just ignore
+        if (message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+            return;
+        }
+
         if (PRAISE_KEYWORDS.some((gWord) => messageContent.includes(gWord))) {
             await user.increment('praisePoints');
             await user.reload();
@@ -33,11 +38,6 @@ module.exports = {
        else if (SIN_KEYWORDS.some((bWord) => messageContent.includes(bWord))) {
             await user.increment('sinPoints');
             await user.reload();
-
-             // If author is admin, just ignore
-            if (message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-                return;
-            }
 
             try {
                 await message.member.timeout(60 * 1000);
