@@ -33,7 +33,7 @@ module.exports = {
        else if (SIN_KEYWORDS.some((bWord) => messageContent.includes(bWord))) {
             await user.increment('sinPoints');
             await user.reload();
-            // await message.member.timeout(60 * 1000);
+            await message.member.timeout(60 * 1000);
             message.channel.send(
                 `UNHOLY TEXT DETECTED BY ${message.author}, You are muted for 1 minute. (+1 sin)\n` +
                 `Total Praise: ${user.praisePoints} | Total Sins: ${user.sinPoints}`,
