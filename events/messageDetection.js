@@ -1,10 +1,10 @@
-const { Client, Collection, Events, GatewayIntentBits, MessageFlags, PermissionsBitField } = require('discord.js');
+const { Events, PermissionsBitField } = require('discord.js');
 const { Users } = require('../database/sequelize');
 
 const config = require('../config.json');
 
 const PRAISE_KEYWORDS = ['bless', 'praise', 'hail', 'worship'];
-const SIN_KEYWORDS = ['ugly', 'stupid', 'hate', 'trash', 'bad', 'dumb', 'suck', 'brainwash', 'ling'];
+const leoProfanity = require('leo-profanity');
 
 // const TARGET_NAME = 'sophia';
 
@@ -45,7 +45,7 @@ module.exports = {
             );
         }
 
-       else if (SIN_KEYWORDS.some((bWord) => messageContent.includes(bWord))) {
+       else if (leoProfanity.check(message.content)) {
             await user.increment('sinPoints');
             await user.reload();
 
@@ -59,7 +59,7 @@ module.exports = {
             } catch (err) {
                 console.error(err);
                 await message.channel.send(
-                `Can't timeout ${message.author}, (admins).`
+                `Can't timeout ${message.author}, (admins).`,
                 );
             }
         }
