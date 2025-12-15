@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, MessageFlags, PermissionsBitField } = require('discord.js');
 const { Users } = require('../database/sequelize');
 
 const PRAISE_KEYWORDS = ['bless', 'praise', 'hail', 'worship'];
@@ -33,11 +33,25 @@ module.exports = {
        else if (SIN_KEYWORDS.some((bWord) => messageContent.includes(bWord))) {
             await user.increment('sinPoints');
             await user.reload();
-            // await message.member.timeout(60 * 1000);
-            message.channel.send(
-                `UNHOLY TEXT DETECTED BY ${message.author}, You are muted for 1 minute. (+1 sin)\n` +
-                `Total Praise: ${user.praisePoints} | Total Sins: ${user.sinPoints}`,
-            );
+
+             // If author is admin, just ignore
+            if (message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+                return;
+            }
+
+            try {
+                await message.member.timeout(60 * 1000);
+                message.channel.send(
+                    `UNHOLY TEXT DETECTED BY ${message.author}, You are muted for 1 minute. (+1 sin)\n` +
+                    `Total Praise: ${user.praisePoints} | Total Sins: ${user.sinPoints}`,
+                );
+
+            } catch (err) {
+                console.error(err);
+                await message.channel.send(
+                `Can't timeout ${message.author}, (admins).`
+                );
+            }
         }
     },
 };
