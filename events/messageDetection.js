@@ -3,9 +3,9 @@ const { Users } = require('../database/sequelize');
 
 const config = require('../config.json');
 
-const PRAISE_KEYWORDS = ['bless', 'praise', 'hail', 'worship'];
+const PRAISE_KEYWORDS = ['bless', 'praise', 'hail', 'worship', 'good', 'ace', 'pro', 'cool', 'lord'];
 const leoProfanity = require('leo-profanity');
-
+leoProfanity.addWord('bad');
 // const TARGET_NAME = 'sophia';
 
 module.exports = {
