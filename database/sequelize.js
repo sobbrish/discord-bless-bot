@@ -25,6 +25,11 @@ const Users = sequelize.define('Users', {
 	currentStatus: {
         type: Sequelize.STRING,
     },
+	currentRank: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+		allowNull: false,
+	},
 
 });
 
