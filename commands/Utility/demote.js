@@ -54,17 +54,25 @@ module.exports = {
 						await gm.setNickname(`Worshipper#${wUser.currentRank}`).catch(() => null);
 					}
 				}
-			}
-			// Demote the person
-			await member.setNickname('Peasant').catch(() => null);; // set the nickname
-			user.currentRank = 0;
-			user.currentStatus = 'Peasant';
-			await user.save();
 
-			return interaction.reply(
-                `DEMOTION. ${target.username}, muted for 1 min. \n` +
-            	`:rage: Straight to PEASANT :index_pointing_at_the_viewer: :joy:`,
-            );
+				// Demote the person
+				await member.setNickname('Peasant').catch(() => null);; // set the nickname
+				user.currentRank = 0;
+				user.currentStatus = 'Peasant';
+				await user.save();
+
+				return interaction.reply(
+					`DEMOTION. ${target.username}, muted for 1 min. \n` +
+					`:rage: Straight to PEASANT :index_pointing_at_the_viewer: :joy:`,
+				);
+			} else {
+				return interaction.reply(
+					`You already at the lowest rank. ${target.username}, muted for 1 min. ` +
+					`🤡 you clown :index_pointing_at_the_viewer: :joy:`,
+				);
+			}
+
+			
 
 		} catch (err) {
 			console.error(err);
