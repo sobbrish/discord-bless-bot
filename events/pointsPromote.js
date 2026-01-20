@@ -1,5 +1,6 @@
 const { Events, PermissionsBitField } = require('discord.js');
 const { Users } = require('../database/sequelize');
+const { promoteUser } = require('../services/rankServices');
 
 module.exports = {
     name: Events.MessageCreate,
@@ -41,44 +42,7 @@ module.exports = {
                 // Check if the member can be managed by the bot
                 if (member.manageable) {
 
-                    if (user.currentStatus == 'Peasant') {
-
-                        const worshipperCount = await Users.count({
-                            where: { currentStatus: 'Worshipper' },
-                        });
-                        const rank = worshipperCount + 1;
-                        await member.setNickname(`Worshipper#${rank}`);
-                        user.currentRank = rank;
-                        user.currentStatus = 'Worshipper';
-                        await user.save();
-
-                    } else if (user.currentStatus === 'Worshipper' && user.currentRank > 1) {
-                        const newRank = user.currentRank - 1;
-                         
-                        // checks if there are two people in the same rank, if there is than promote user who most recently got promoted and demote the other
-                        const userAtRank = await Users.findOne({
-                                where: { currentRank: newRank },
-                        });
-
-                        if (userAtRank) {
-
-                            userAtRank.currentRank = user.currentRank; // where the swap occurs
-                            await userAtRank.save();
-                            const memberAtRank = message.guild.members.cache.get(userAtRank.userId);
-                            if (memberAtRank && memberAtRank.manageable) {
-                                try {
-                                    await memberAtRank.setNickname(`Worshipper#${userAtRank.currentRank}`);
-                                } catch (err) {
-                                    console.error(err);
-                                    console.warn(`Cannot change nickname for ${memberAtRank.user.tag}`);
-                                }
-                            }
-                        }
-
-                        user.currentRank = newRank;
-                        await member.setNickname(`Worshipper#${newRank}`);
-                        await user.save();
-                    }
+                    await promoteUser(user, member, message.guid);
                     
                     if (user.currentRank == 1) {
                         await message.channel.send("Chill!! You're already my #1 worshipper 😉");
