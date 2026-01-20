@@ -1,6 +1,6 @@
 // Initiates the bot and the database
 
-const { Events } = require('discord.js');
+const { Events, PermissionsBitField } = require('discord.js');
 const { sequelize, Users } = require('../database/sequelize');
 
 module.exports = {
@@ -19,14 +19,16 @@ module.exports = {
 				// Ignore bots
                 if (member.user.bot) continue;
 
+                if (member.permissions.has(PermissionsBitField.Flags.Administrator)) continue;
+                
                 if (member.nickname?.startsWith('Worshipper')) {
-                    await Users.findOrCreate({
-                        where: { userId: member.id },
-                        defaults: {
-                            currentStatus: 'Worshipper',
-                            currentRank: member.nickname.slice(-1),
-                        },
-                    });
+                await Users.findOrCreate({
+                    where: { userId: member.id },
+                    defaults: {
+                        currentStatus: 'Worshipper',
+                        currentRank: member.nickname.slice(-1),
+                    },
+                });
 
                 } else {
                     await Users.findOrCreate({
