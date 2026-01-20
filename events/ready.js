@@ -19,16 +19,27 @@ module.exports = {
 				// Ignore bots
                 if (member.user.bot) continue;
 
-                const [user, created] = await Users.findOrCreate({
-                    where: { userId: member.id },
-                    defaults: {
-                        currentStatus: member.nickname || 'Peasant',
-                    },
-                });
+                if (member.nickname?.startsWith('Worshipper')) {
+                    await Users.findOrCreate({
+                        where: { userId: member.id },
+                        defaults: {
+                            currentStatus: 'Worshipper',
+                            currentRank: member.nickname.slice(-1),
+                        },
+                    });
 
-                if (!created) {
-                    user.currentStatus = member.nickname || user.currentStatus;
-                    await user.save();
+                } else {
+                    await Users.findOrCreate({
+                        where: { userId: member.id },
+                        defaults: {
+                            currentStatus: 'Peasant',
+                            currentRank: 0,
+                        },
+                    });
+                   if (member.manageable) {
+                        await member.setNickname('Peasant');
+                    } 
+
                 }
             }
         }

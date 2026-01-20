@@ -1,3 +1,5 @@
+// Handles / commands
+
 const { Events, MessageFlags } = require('discord.js');
 
 module.exports = {
