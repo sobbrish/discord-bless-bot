@@ -32,7 +32,7 @@ module.exports = {
             try {
                 // Retrieve the GuildMember object
                 const member = message.guild.members.cache.get(user.userId);
-                //const member = await message.guild.members.fetch(user.userId).catch(() => null);
+                // const member = await message.guild.members.fetch(user.userId).catch(() => null);
 
                 if (!member) {
                     throw new Error("Member not found in this guild.");
