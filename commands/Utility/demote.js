@@ -9,8 +9,8 @@ module.exports = {
 		.addUserOption(opt => // adds a required user picker to the /demote command
 			opt.setName('user')
 				.setDescription('User to demote')
-				.setRequired(true)
-		)
+				.setRequired(true),
+			)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator), // only admins
 	
 
