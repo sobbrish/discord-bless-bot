@@ -57,17 +57,14 @@ module.exports = {
                         return message.channel.send("Chill!! You're already my #1 worshipper 😉");
                     }
 
-                    await message.channel.send(
-                        `${message.author} has been PROMOTED!\n` +
-                        `Total Praise: ${user.praisePoints} | Total Sins: ${user.sinPoints}`,
-                    );
+                    await message.channel.send(`**${message.author.username}** has been PROMOTED!\n`);
                 } else {
                     throw new Error("I cannot change this user's nickname.");
                 }
 
             } catch (err) {
                 console.error(err);
-                await message.channel.send(`Can't change ${message.author}'s nickname.`);
+                await message.channel.send(`Can't change **${message.author.username}**'s nickname.`);
             }
         }       
     },

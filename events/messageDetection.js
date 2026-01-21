@@ -46,7 +46,7 @@ module.exports = {
             await user.increment('praisePoints');
             await user.reload();
             message.channel.send(
-                `${message.author} has been blessed! (+1 praise)\n` +
+                `**${message.author.username}** has been blessed! (+1 praise)\n` +
                 `Total Praise: ${user.praisePoints} | Total Sins: ${user.sinPoints}`,
             );
         }
@@ -59,7 +59,7 @@ module.exports = {
                 await message.member.timeout(60 * 1000);
 
                 message.channel.send(
-                    `UNHOLY TEXT DETECTED BY ${message.author}, You are muted for 1 minute. (+1 sin)\n` +
+                    `UNHOLY TEXT DETECTED BY **${message.author.username}**, You are muted for 1 minute. (+1 sin)\n` +
                     `Total Praise: ${user.praisePoints} | Total Sins: ${user.sinPoints}`,
                 );
 
@@ -102,15 +102,11 @@ module.exports = {
 
                         }
 
-                        await message.channel.send(
-                            `${message.author} has been DEMOTED!\n` +
-                            `Total Praise: ${user.praisePoints} | Total Sins: ${user.sinPoints}`,
-                        );
-
+                        await message.channel.send(`**${message.author.username}** has been DEMOTED!\n`);
 
                     } catch (err) {
                         console.error(err);
-                        await message.channel.send(`Can't change ${message.author}'s nickname.`);
+                        await message.channel.send(`Can't change **${message.author.username}**'s nickname.`);
                     }
                     
                     // Reset sin points to 0
@@ -123,7 +119,7 @@ module.exports = {
             } catch (err) {
                 console.error(err);
                 await message.channel.send(
-                `Can't timeout ${message.author}, (admins).`,
+                `Can't timeout **${message.author.username}**, (admins).`,
                 );
             }
         }
