@@ -4,7 +4,10 @@ async function promoteUser(user, member, guild) {
     if (user.currentStatus == 'Peasant') {
 
         const worshipperCount = await Users.count({
-            where: { currentStatus: 'Worshipper' },
+            where: { 
+                currentStatus: 'Worshipper',
+                guildId: guild.id,
+             },
         });
         const rank = worshipperCount + 1;
         await member.setNickname(`Worshipper#${rank}`);
@@ -17,8 +20,13 @@ async function promoteUser(user, member, guild) {
             
         // checks if there are two people in the same rank, if there is than promote user who most recently got promoted and demote the other
         const userAtRank = await Users.findOne({
-                where: { currentRank: newRank },
+            where: {
+                currentRank: newRank,
+                guildId: guild.id,
+                currentStatus: 'Worshipper',
+            },
         });
+
 
         if (userAtRank) {
 

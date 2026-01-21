@@ -14,7 +14,10 @@ module.exports = {
 		if (!target) return interaction.reply("Could not find that member.");
 		
 		const [user] = await Users.findOrCreate({
-            where: { userId: target.id },
+            where: { 
+				userId: target.id,
+				guildId: interaction.guild.id,
+			 },
             defaults: {
                 currentStatus: 'Peasant',
                 currentRank: 0,

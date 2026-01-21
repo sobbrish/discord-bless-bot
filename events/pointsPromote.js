@@ -10,7 +10,10 @@ module.exports = {
         if (message.author.bot) return;
 
         const [user] = await Users.findOrCreate({
-            where: { userId: message.author.id },
+            where: { 
+                userId: message.author.id,
+                guildId: message.guild.id,
+             },
             defaults: {
                 // currentStatus: message.member?.nickname || 'Peasant', // we compare Status not literal names "Peasants"
                 currentStatus: 'Peasant',
@@ -42,10 +45,16 @@ module.exports = {
                 // Check if the member can be managed by the bot
                 if (member.manageable) {
 
-                    await promoteUser(user, member, message.guid);
+                    if (user.currentStatus === 'Worshipper' && user.currentRank === 1) {
+                        return { blocked: true };
+                    }
+
+
+                    const result = await promoteUser(user, member, message.guild);
                     
-                    if (user.currentRank == 1) {
-                        await message.channel.send("Chill!! You're already my #1 worshipper 😉");
+
+                    if (result?.blocked) {
+                        return message.channel.send("Chill!! You're already my #1 worshipper 😉");
                     }
 
                     await message.channel.send(

@@ -6,7 +6,10 @@ module.exports = {
   name: Events.GuildMemberRemove, // when any member leaves the server while the bot is online
   async execute(member) { // member = member who has left - you can still read member.id
     try {
-      const user = await Users.findOne({ where: { userId: member.id } }); // look up user in DB
+      const user = await Users.findOne({ where: { 
+        userId: member.id,
+        guildId: member.guild.id,
+     } }); // look up user in DB
       if (!user) return;
 
       // Only need to fix the ladder if they were ranked/worshipper (if peasant, it don't matter)
@@ -16,6 +19,7 @@ module.exports = {
         // Shift everyone below them up (rank decreases by 1)
         const worshippersBelow = await Users.findAll({
           where: {
+            guildId: member.guild.id,
             currentStatus: 'Worshipper',
             currentRank: { [Op.gt]: leavingRank },
           },

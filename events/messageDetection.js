@@ -15,7 +15,10 @@ module.exports = {
         // Ignore bots
         if (message.author.bot) return;
         const [user] = await Users.findOrCreate({
-            where: { userId: message.author.id },
+            where: { 
+                userId: message.author.id,
+                guildId: message.guild.id,
+             },
             defaults: {
                 // currentStatus: message.member?.nickname || 'Peasant', // we compare Status not literal names "Peasants"
                 currentStatus: 'Peasant',
@@ -69,16 +72,16 @@ module.exports = {
                         if (!member) throw new Error("Member not found in this guild.");
                         if (!member.manageable) throw new Error("I cannot change this user's nickname."); // Check if this member can be managed by the bot
 
-                        if (user.currentStatus == 'Worshipper') { // when a Worshipper is getting demoted (doesn't matter for a Peasant to get Demoted)
-                            
+                        if (user.currentStatus == 'Worshipper') { // when a Worshipper is getting demoted (doesn't matter for a Peasant to get Demoted) 
+
                             const worshippersBelow = await Users.findAll({
                                 where: {
+                                    guildId: message.guild.id,
                                     currentStatus: 'Worshipper',
                                     currentRank: { [Op.gt]: user.currentRank },
                                 },
                                 order: [['currentRank', 'ASC']], // in ascending order
                             }); // every user with Worshipper status and with rank greater than demoting user's rank
-                            
 
                             // Promote everyone below (rank number decreases by 1)
                             for (const wUser of worshippersBelow) {

@@ -6,7 +6,10 @@ module.exports = {
     async execute(member) {
         if (member.user.bot) return;
         await Users.findOrCreate({
-            where: { userId: member.id },
+            where: { 
+                userId: member.id,
+                guildId: member.guild.id,
+             },
             defaults: {
                 praisePoints: 0,
                 sinPoints: 0,
