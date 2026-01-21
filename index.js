@@ -3,6 +3,7 @@ const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 
+// Permissions for bot
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,

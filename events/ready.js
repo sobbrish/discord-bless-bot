@@ -1,7 +1,8 @@
 // Initiates the bot and the database
 
-const { Events, PermissionsBitField } = require('discord.js');
-const { sequelize, Users } = require('../database/sequelize');
+const { Events } = require('discord.js');
+const { sequelize } = require('../database/sequelize');
+const { initGuild } = require('../services/initGuildService');
 
 module.exports = {
     name: Events.ClientReady,
@@ -13,37 +14,8 @@ module.exports = {
 
         // Populate the database with existing users
 		for (const guild of client.guilds.cache.values()) {
-            await guild.members.fetch();
-
-            for (const member of guild.members.cache.values()) {
-				// Ignore bots
-                if (member.user.bot) continue;
-
-                if (member.permissions.has(PermissionsBitField.Flags.Administrator)) continue;
-                
-                if (member.nickname?.startsWith('Worshipper')) {
-                await Users.findOrCreate({
-                    where: { userId: member.id },
-                    defaults: {
-                        currentStatus: 'Worshipper',
-                        currentRank: member.nickname.slice(-1),
-                    },
-                });
-
-                } else {
-                    await Users.findOrCreate({
-                        where: { userId: member.id },
-                        defaults: {
-                            currentStatus: 'Peasant',
-                            currentRank: 0,
-                        },
-                    });
-                   if (member.manageable) {
-                        await member.setNickname('Peasant');
-                    } 
-
-                }
-            }
+            
+            await initGuild(guild);
         }
 
         console.log('All guild members added/updated in the database.');
