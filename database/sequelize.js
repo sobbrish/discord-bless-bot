@@ -10,7 +10,11 @@ const sequelize = new Sequelize('database', 'user', 'password', {
 const Users = sequelize.define('Users', {
 	userId: {
 		type: Sequelize.STRING,
-		unique: true,
+		unique: false,
+	},
+	guildId: {
+		type: Sequelize.INTEGER,
+		unique: false,
 	},
 	praisePoints: {
 		type: Sequelize.INTEGER,
