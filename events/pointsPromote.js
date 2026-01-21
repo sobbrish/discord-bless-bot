@@ -46,16 +46,10 @@ module.exports = {
                 if (member.manageable) {
 
                     if (user.currentStatus === 'Worshipper' && user.currentRank === 1) {
-                        return { blocked: true };
-                    }
-
-
-                    const result = await promoteUser(user, member, message.guild);
-                    
-
-                    if (result?.blocked) {
                         return message.channel.send("Chill!! You're already my #1 worshipper 😉");
                     }
+
+                    await promoteUser(user, member, message.guild);
 
                     await message.channel.send(
                         `${message.author} has been PROMOTED!\n` +
