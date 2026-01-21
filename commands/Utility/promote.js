@@ -17,7 +17,7 @@ module.exports = {
             where: { 
 				userId: target.id,
 				guildId: interaction.guild.id,
-			 },
+			},
             defaults: {
                 currentStatus: 'Peasant',
                 currentRank: 0,
