@@ -3,6 +3,7 @@
 const { Events } = require('discord.js');
 const { sequelize } = require('../database/sequelize');
 const { initGuild } = require('../services/initGuildService');
+const { deployCommandsToGuilds } = require('../services/deploy-commands');
 
 module.exports = {
     name: Events.ClientReady,
@@ -17,6 +18,9 @@ module.exports = {
             
             await initGuild(guild);
         }
+
+        const guildIds = client.guilds.cache.map(g => g.id);
+        await deployCommandsToGuilds(guildIds);
 
         console.log('All guild members added/updated in the database.');
     },
